@@ -14,15 +14,17 @@ telemetry.disable_telemetry()
 # 1. easy way to define multi metrics from single source table -- done
 # 2. custom naming of final metric names or default names -- done
 # 3. Parallelizable -- done
-# 4. Rolling stats -- pending
+# 4. Pending
+#       * Rolling stats
+#       * Weighted stats
 
 
 inputs = {  # load from actuals or wherever -- this is our initial data we use as input.
     # Note: these do not have to be all series, they could be scalar inputs.
     'start_date': '2023-11-01',
     'end_date': '2023-11-10',
-    'resample': 'W-SUN',
-    #'aggs': {'price': ['mean', 'last'], 'volume': ['sum']},  # default column naming
+    'resample': 'W',
+    # 'aggs': {'price': ['mean', 'last'], 'volume': ['sum']},  # default column naming
     'aggs': {
         # colunm_name = ('source_column', 'pandas allowed stat func as string or lambda')
         'openp': ('price', 'first'),
@@ -30,9 +32,11 @@ inputs = {  # load from actuals or wherever -- this is our initial data we use a
         'lowp': ('price', 'min'),
         'closep': ('price', 'last'),
         'volume': ('volume', 'sum'),
-        'adv': ('volume', lambda x: np.mean(x)),  # ('volume', 'mean') as usual works too
+        'adv': ('volume', lambda x: np.mean(x)),  # of course, ('volume', 'mean') as usual works too
         'mdv': ('volume', 'median'),
     },
+
+    # filter for specific tickers
     #'tickers': ['B'],
 }
 
@@ -51,14 +55,18 @@ dr = (
 
 output_columns = [
     #'stock_data',
-    'final_stats'
+    'final_stats',
+    'final_stats2',
+    #'ticker_df',
+    #'ticker_list'
+    #'adv_5d'
 ]
 
 
 out = dr.execute(output_columns, inputs=inputs)
 print('\n**************************\nOutput:')
-# print(out)
-print(out['final_stats'])
+print(out)
+#print(out['final_stats'])
 
 
 run_it = False

@@ -37,8 +37,12 @@ def ticker_df(stock_data: pd.DataFrame) -> Parallelizable[pd.DataFrame]:
         yield df
 
 
+def ticker_list(stock_data: pd.DataFrame) -> list:
+    return sorted(stock_data['ticker'].unique().tolist())
+
 
 def _reshape_agg(aggs: dict):
+    """Wrapper to cast into consistent format that's passed to pd.Dataframe.agg(...)"""
     out = {}
     for key, item in aggs.items():
         if isinstance(item, list):
@@ -71,6 +75,26 @@ def ticker_aggs(ticker_df: pd.DataFrame, aggs: dict = None, resample: str = None
     return df[ordered_cols]
 
 
+
 def final_stats(ticker_aggs: Collect[pd.DataFrame]) -> pd.DataFrame:
     df = pd.concat(ticker_aggs, ignore_index=True)
     return df
+
+
+def final_stats2(ticker_aggs: Collect[pd.DataFrame]) -> pd.DataFrame:
+    df = pd.concat(ticker_aggs, ignore_index=True)
+    return df
+
+
+
+def ticker_adv_5d(ticker_df: pd.DataFrame) -> pd.DataFrame:
+    return ticker_df.set_index(['ticker'], append=True)['volume'].rolling(5).mean().reset_index()
+
+def adv_5d(ticker_adv_5d: Collect[pd.DataFrame]) -> pd.DataFrame:
+    return pd.concat(ticker_adv_5d, axis=0)
+
+# FIXME: make a generic Collect with @resolve for each requested field
+def adv_5d_with_resolve(ticker_adv_5d: Collect[pd.DataFrame]) -> pd.DataFrame:
+    return pd.concat(ticker_adv_5d, axis=0)
+
+
