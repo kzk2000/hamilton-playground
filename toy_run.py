@@ -20,7 +20,7 @@ dr = (
 
 output_columns = [
     'total_words',
-    #'total_words2',
+    'total_words2',  # having both enabled leads to error
 ]
 
 
