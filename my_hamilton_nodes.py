@@ -37,6 +37,7 @@ def ticker_df(stock_data: pd.DataFrame) -> Parallelizable[pd.DataFrame]:
         yield df
 
 
+
 def _reshape_agg(aggs: dict):
     out = {}
     for key, item in aggs.items():
