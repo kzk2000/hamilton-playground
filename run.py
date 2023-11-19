@@ -10,10 +10,11 @@ import json
 
 telemetry.disable_telemetry()
 
-# Ultimate objective
+# Ultimate objectives
 # 1. easy way to define multi metrics from single source table -- done
 # 2. custom naming of final metric names or default names -- done
-# 3. Parallelizable
+# 3. Parallelizable -- done
+# 4. Rolling stats -- pending
 
 
 inputs = {  # load from actuals or wherever -- this is our initial data we use as input.
@@ -23,13 +24,14 @@ inputs = {  # load from actuals or wherever -- this is our initial data we use a
     'resample': 'W-SUN',
     #'aggs': {'price': ['mean', 'last'], 'volume': ['sum']},  # default column naming
     'aggs': {
+        # colunm_name = ('source_column', 'pandas allowed stat func as string or lambda')
         'openp': ('price', 'first'),
         'highp': ('price', 'max'),
         'lowp': ('price', 'min'),
         'closep': ('price', 'last'),
         'volume': ('volume', 'sum'),
-        'volume_mean': ('volume', lambda x: np.mean(x)),
-        #'volume_median': ('volume', lambda x: np.median(x)),
+        'adv': ('volume', lambda x: np.mean(x)),  # ('volume', 'mean') as usual works too
+        'mdv': ('volume', 'median'),
     },
     #'tickers': ['B'],
 }
