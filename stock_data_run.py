@@ -1,8 +1,8 @@
-import my_hamilton_nodes as mh
+
 import numpy as np
 import pandas as pd
 
-import my_hamilton_nodes
+import stock_data_nodes
 from hamilton import driver, base, telemetry
 from hamilton.execution import executors
 from hamilton.function_modifiers import value, source
@@ -21,7 +21,7 @@ telemetry.disable_telemetry()
 
 inputs = {  # load from actuals or wherever -- this is our initial data we use as input.
     # Note: these do not have to be all series, they could be scalar inputs.
-    'start_date': '2023-11-01',
+    'start_date': '2023-10-30',  # Monday
     'end_date': '2023-11-10',
     'resample': 'W',
     # 'aggs': {'price': ['mean', 'last'], 'volume': ['sum']},  # default column naming
@@ -46,9 +46,9 @@ config = {}
 
 dr = (
     driver.Builder()
-    .with_modules(my_hamilton_nodes)
+    .with_modules(stock_data_nodes)
     .enable_dynamic_execution(allow_experimental_mode=True)
-    #.with_local_executor(executors.SynchronousLocalTaskExecutor())
+    # .with_local_executor(executors.SynchronousLocalTaskExecutor())
     .with_config(config)
     .build()
 )
@@ -56,7 +56,7 @@ dr = (
 output_columns = [
     #'stock_data',
     'final_stats',
-    'final_stats2',
+
     #'ticker_df',
     #'ticker_list'
     #'adv_5d'
@@ -65,8 +65,10 @@ output_columns = [
 
 out = dr.execute(output_columns, inputs=inputs)
 print('\n**************************\nOutput:')
-print(out)
-#print(out['final_stats'])
+# print(out)
+print(out['final_stats'])
+out['final_stats']['from'].dt.day_name()
+
 
 
 run_it = False

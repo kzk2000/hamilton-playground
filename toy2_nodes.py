@@ -13,18 +13,13 @@ def data_node(input_values: List) -> Parallelizable[str]:
 
 
 def agg_1(data_agg1: str) -> int:
-    print('**********\nagg_1')
-    print(type(data_agg1))  # comes in as generator?
-    print(list(data_agg1))
+    """Number of words"""
     return len(data_agg1.split("_"))
 
 
 def agg_2(data_agg2: str) -> int:
-    print('**********\nagg_2')
-    print(type(data_agg2))  # comes in as generator?
-    print(list(data_agg2))
-    return 20
-    #return len(data_agg2)
+    """Total length"""
+    return len(data_agg2)
 
 
 @parameterize(
@@ -32,7 +27,7 @@ def agg_2(data_agg2: str) -> int:
     output_agg2=dict(upstream_source=source('agg_2')),
 )
 def output_node(upstream_source: Collect[int]) -> int:
-    return upstream_source
+    return sum(upstream_source)
 
 
 

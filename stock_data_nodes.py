@@ -7,11 +7,11 @@ from hamilton.function_modifiers import extract_columns
 from hamilton.htypes import Parallelizable, Collect
 
 
-@extract_columns('price', 'volume')
+
 def stock_data(start_date: str = None, end_date: str = None, tickers: list = None) -> pd.DataFrame:
     random.seed(42)
-    dates = pd.date_range('2023-11-01', '2023-12-31')
-    ticker_list = ['A', 'B']
+    dates = pd.date_range('2023-10-30', '2023-12-31')
+    ticker_list = ['A', 'B', 'C']
     data = []
     for date in dates:
         for ticker in ticker_list:
